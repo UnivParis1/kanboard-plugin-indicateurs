@@ -1,0 +1,48 @@
+<div id="vueMain" v-cloak>
+  <div>
+    <div class="globalSearch">
+        <label>Rechercher&nbsp;:
+            <input v-model="filterAll" type="search">
+        </label>
+        <label>Début&nbsp;
+            <input type="number" :min="minAllowedYear" :max="maxAllowedYear" v-model.number="startYear">
+        </label>
+        <label>Fin&nbsp;
+            <input type="number" :min="minAllowedYear" :max="maxAllowedYear" v-model.number="endYear">
+        </label>
+    
+    </div>
+    
+    <div id="pie_etats" class="a-pie"></div>    
+    <div id="pie_services" class="a-pie"></div>
+    <div id="pie_domaines" class="a-pie"></div>
+
+    <div id="histogrammeGeneral"></div>
+  </div>
+    <table width="100%">
+      <thead>
+        <tr>
+            <th v-for="col in columns" class="sortOnClick"
+                @click="sortBy(col.key)">
+                {{ col.name }}<span v-if="col.key === 'etat' && currentYear"> en {{currentYear}}</span>
+                <i class="fa" v-if="sortKey === col.key" :class="sortOrders[col.key] > 0 ? 'fa-caret-down' : 'fa-caret-up'"></i>
+            </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="project in filteredData">
+          <td v-for="col in columns">
+            <span v-if="col.key === 'name'" v-html="project.name_link + project.tooltips">
+            </span>
+            <span v-else-if="col.key === 'etat'">
+               <progress v-if="!currentYear" class='tasks_progress' :value='project.progress || 0'>{{project.progress}}</progress>
+                {{currentYear ? project.year_etat : project.etat}}
+            </span>
+            <span v-else>
+                {{project[col.key]}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+</div>
