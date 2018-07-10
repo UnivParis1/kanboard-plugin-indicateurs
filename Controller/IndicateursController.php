@@ -30,11 +30,14 @@ class IndicateursController extends BaseController
             $owner = $this->userModel->getById($project['owner_id']);
             $categories = array_map(function ($cat) { return $cat['name']; }, $this->categoryModel->getAll($project['id']));
 
+            $roles = array_merge([ "owner" => "Responsable du projet" ], $this->projectRoleModel->getList($project['id']));
+            unset($roles['project-viewer']);
+
             $name_link = $this->helper->url->link($project["name"], 'BoardViewController', 'show', array('project_id' => $project['id']), false, '', '', true);
 
             $tooltip_users = $this->template->render('project_user_overview/tooltip_users', array(
                 'users' => array_merge([ "owner" => [ $owner['name'] ] ], $this->projectUserRoleModel->getAllUsersGroupedByRole($project['id'])),
-                'roles' => array_merge([ "owner" => "Responsable du projet" ], $this->projectRoleModel->getList($project['id'])),
+                'roles' => $roles,
             ));
             $tooltips = $this->helper->app->tooltipHtml($tooltip_users, 'fa-users');
             if (!empty($project['description']))
