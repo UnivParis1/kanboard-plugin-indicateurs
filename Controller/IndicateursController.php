@@ -4,7 +4,7 @@ use Kanboard\Controller\BaseController;
 
 class IndicateursController extends BaseController
 {
-    static $roleForService = 'Directeur projet';
+    static $roleForService = 'Directeur de projet';
     static $group2service_regexp = '/Chef de service (.*)/';
 
     static $tasksProgress = [
