@@ -313,17 +313,17 @@ new Vue({
       displayCharts: function () {
         var projets = this.filteredData;
         this.pieChart_helper('etat', 'États des projets' + (this.currentYear ? ' en ' + this.currentYear : ' : ' + projets.length),
-                             this.currentYear ? 'year_etat' : 'etat');
+                             this.currentYear ? 'year_etat' : 'etat', colors.etat);
         this.pieChart_helper('service', 'Projets par services');
         this.pieChart_helper('domaine', 'Projets par domaine fonctionnel');
         histogrammeGeneral(this.startYear, this.endYear, projets);
       },
-      pieChart_helper: function (kind, title, kind_for_nb) {
+      pieChart_helper: function (kind, title, kind_for_nb, all) {
         var filterKeys = this.filterKeys;
         var filterKeysIgnoreKind = { ...this.filterKeys, [kind]: '' };
         var projets = filter_projets(this.projets, filterKeysIgnoreKind, this.filterAll, this.startYear, this.endYear);
 
-        var all = groupBy(this.projets, kind);
+        if (!all) all = groupBy(this.projets, kind);
         var nbs = groupBy(projets, kind_for_nb || kind);
 
         pieChart({ 
