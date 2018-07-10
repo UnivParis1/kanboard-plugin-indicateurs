@@ -307,6 +307,7 @@ new Vue({
         if (this._delayedDisplayCharts) clearTimeout(this._delayedDisplayCharts);
         this._delayedDisplayCharts = setTimeout(function () {
             that.displayCharts();
+            KB.tooltip(); // enable tooltips, otherwise only done on page load (cf js/core/tooltip.js)
         }, 300);
       },
       displayCharts: function () {
