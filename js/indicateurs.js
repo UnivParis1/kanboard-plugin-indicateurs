@@ -138,10 +138,11 @@ function cachedChart(eltId, params) {
 
 function pieChart(params) {
     cachedChart(params.eltId, {
-        chart: { type: 'pie' },
+        chart: { type: 'pie', width: 400, height: 300 },
         title: { text: params.title },
         plotOptions: {
             pie: {
+                size: 150,
                 allowPointSelect: true,
                 cursor: 'pointer',
                 dataLabels: {

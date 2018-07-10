@@ -29,6 +29,9 @@
     margin-right: 1rem;
 }
 
-.a-pie { 
+.pies {
+    text-align: center;
+}
+.pies > div { 
     display: inline-block;
 }
