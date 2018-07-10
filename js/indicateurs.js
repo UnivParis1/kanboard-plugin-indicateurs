@@ -48,6 +48,10 @@ function min_no_falsy(a, b) {
     return a && b ? Math.min(a, b) : (a || b);
 }
 
+function toLowerCaseIfString(v) {
+    return typeof v === "string" ? v.toLowerCase() : v;
+}
+
 function sqlDateToYear(date) {
     return date && new Date(date).getFullYear();
 }
@@ -283,9 +287,10 @@ new Vue({
             if (this.sortKey) {
                 var sortKey = this.sortKey
                 var order = this.sortOrders[sortKey] || 1
+                if (sortKey === "etat") sortKey = this.currentYear ? "year_etat" : "progress";
                 data = data.slice().sort(function (a, b) {
-                a = a[sortKey].toLowerCase()
-                b = b[sortKey].toLowerCase()
+                a = toLowerCaseIfString(a[sortKey])
+                b = toLowerCaseIfString(b[sortKey])
                 return (a === b ? 0 : a > b ? 1 : -1) * order
                 })
             }
