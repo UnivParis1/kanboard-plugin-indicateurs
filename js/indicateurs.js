@@ -313,7 +313,7 @@ new Vue({
       },
       displayCharts: function () {
         var projets = this.filteredData;
-        this.pieChart_helper('etat', 'États des projets' + (this.currentYear ? ' en ' + this.currentYear : ' : ' + projets.length),
+        this.pieChart_helper('etat', 'États des projets' + (this.currentYear ? ' en ' + this.currentYear : '') + ' (' + projets.length + ')',
                              this.currentYear ? 'year_etat' : 'etat', colors.etat);
         this.pieChart_helper('service', 'Projets par services');
         this.pieChart_helper('domaine', 'Projets par domaine fonctionnel');
