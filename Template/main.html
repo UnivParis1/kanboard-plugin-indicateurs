@@ -36,7 +36,7 @@
             </span>
             <span v-else-if="col.key === 'etat'">
                <progress v-if="!currentYear" class='tasks_progress' :value='project.progress || 0'>{{project.progress}}</progress>
-                {{currentYear ? project.year_etat : project.etat}}
+               <etat-with-color :etat="currentYear ? project.year_etat : project.etat"></etat-with-color>
             </span>
             <span v-else>
                 {{project[col.key]}}

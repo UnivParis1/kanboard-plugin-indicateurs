@@ -220,6 +220,16 @@ function computeProjets() {
       });
 }
 
+Vue.component('etat-with-color', {
+    props: [ 'etat' ],
+    template: "<span :style='{ color: color }'>{{etat}}</span>",
+    computed: {
+        color: function() {
+            return colors.etat[this.etat];
+        },
+    },
+});
+
 new Vue({
     el: '#vueMain',
     propsData: {
