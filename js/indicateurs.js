@@ -217,6 +217,9 @@ function filter_projets(projets, filterKeys, filterAll, startYear, endYear) {
 
 function computeProjets() {
     return params.projets.map(function (projet) {
+        [ 'last_modified', 'is_active' ].forEach(function (field) {
+            projet[field] = parseInt(projet[field]);
+        });
         projet.start_year = sqlDateToYear(projet.start_date);
         projet.end_year = sqlDateToYear(projet.end_date);
         projet.close_year = projet.is_active ? null : epochToYear(projet.last_modified);
