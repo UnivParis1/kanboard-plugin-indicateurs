@@ -324,7 +324,7 @@ new Vue({
       },
       pieChart_helper: function (kind, title, kind_for_nb, all) {
         var filterKeys = this.filterKeys;
-        var filterKeysIgnoreKind = { ...this.filterKeys, [kind]: '' };
+        var filterKeysIgnoreKind = { ...this.filterKeys, [kind]: '' };
         var projets = filter_projets(this.projets, filterKeysIgnoreKind, this.filterAll, this.startYear, this.endYear);
 
         if (!all) all = groupBy(this.projets, kind);
