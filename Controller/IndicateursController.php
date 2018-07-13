@@ -68,8 +68,6 @@ class IndicateursController extends BaseController
         foreach ($this->projectGroupRoleModel->getGroups($project['id']) as $e) {
             if ($e['role'] === self::$roleForService) {
                 if (preg_match(self::$group2service_regexp, $e['name'], $m)) return $m[1];
-                // fallback on raw name
-                return $e['name'];
             }
         }
         return 'inconnu';
