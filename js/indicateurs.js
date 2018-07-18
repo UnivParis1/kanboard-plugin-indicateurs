@@ -37,6 +37,12 @@ var colors = {
   },
 };
 
+function makeObject(key, val) {
+    let o = {};
+    o[key] = val;
+    return o;
+}
+
 function groupBy(xs, key) {
     return xs.reduce(function(rv, x) {
         (rv[x[key]] = rv[x[key]] || []).push(x);
@@ -324,7 +330,7 @@ new Vue({
       },
       pieChart_helper: function (kind, title, kind_for_nb, all) {
         var filterKeys = this.filterKeys;
-        var filterKeysIgnoreKind = { ...this.filterKeys, [kind]: '' };
+        var filterKeysIgnoreKind = $.extend({}, this.filterKeys, makeObject(kind, ''));
         var projets = filter_projets(this.projets, filterKeysIgnoreKind, this.filterAll, this.startYear, this.endYear);
 
         if (!all) all = groupBy(this.projets, kind);
