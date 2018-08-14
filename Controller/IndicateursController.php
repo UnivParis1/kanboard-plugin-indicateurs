@@ -14,13 +14,6 @@ class IndicateursController extends BaseController
         'Terminé' => 1,
     ];
 
-    static $priorites = [ 
-        'Basse', 
-        'Normale', 
-        'Haute',
-        'Très haute',
-    ];
-
     public function index()
     {
         $projets = [];
@@ -49,7 +42,6 @@ class IndicateursController extends BaseController
                 'progress' => $this->computeProgress($project),
                 'service' => $this->computeService($project),
                 'domaine' => self::getDomaine($categories),
-                "priorite" => self::$priorites[$project['priority_default']],
                 "name_link" => $name_link,
                 "tooltips" => $tooltips,
             ], $project);
@@ -58,7 +50,6 @@ class IndicateursController extends BaseController
         $this->response->html($this->helper->layout->pageLayout('Indicateurs:indicateurs', array(
             'title' => t("Indicateurs"),
             'params' => [ 
-                'priorites' => self::$priorites,
                 'projets' => $projets,
             ],
         )));

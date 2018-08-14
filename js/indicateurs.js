@@ -4,8 +4,15 @@ var columns = [
     { name: "Etat", key: "etat" },
     { name: "Date de début", key: "start_date" },
     { name: "Date de fin", key: "end_date" },
-    { name: "Priorité", key: 'priorite' },
+    { name: "Priorité", key: 'priority_default' },
     { name: "Domaine", key: 'domaine' },
+];
+
+var priorites = [ 
+    'Basse', 
+    'Normale', 
+    'Haute',
+    'Très haute',
 ];
 
 var colors = {
@@ -284,6 +291,7 @@ new Vue({
       },
     },
     computed: {
+      priorites: function () { return priorites },
       minAllowedYear: function () { return 2010 },
       maxAllowedYear: function () { return 2040 },
       filteredData: function () {
