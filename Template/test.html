@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+<body>
+  <pre id="output"></pre>
+  <script>
+    const Vue = function() {};
+    Vue.component = function () {};
+
+    function toEpoch(s) {
+        return new Date(s).getTime() / 1000;
+    }
+
+    const params = {
+        projets: [
+        {
+            "etat": "Terminé",
+            "name": "Studapart",
+            "start_date": "2018-04-02",
+            "last_modified": "" + toEpoch('2018-06-12'),
+            "end_date": "2018-06-30",
+            "is_active": "0",
+          },
+          {
+            "etat": "Futur",
+            "name": "Grouper 2.4",
+            "start_date": "2018-12-01",
+            "last_modified": "" + toEpoch('2018-06-12'),
+            "end_date": "2019-04-01",
+            "is_active": "1",
+          },
+          {
+            "etat": "En retard",
+            "name": "ECM",
+            "start_date": "2015-01-01",
+            "last_modified": "" + toEpoch('2018-06-12'),
+            "end_date": "2017-02-01",
+            "is_active": "1",
+          },
+          {
+            "etat": "En cours",
+            "name": "ECM2",
+            "start_date": "2015-01-01",
+            "last_modified": "" + toEpoch('2018-06-12'),
+            "end_date": "2017-12-31",
+            "is_active": "1",
+          },
+        ],
+    };
+  </script>
+  <script src="../js/indicateurs.js"></script>
+  <script>
+    today_year = 2017;
+    computeProjets();
+    const output = document.getElementById('output');
+    function test(projet, year, expected_etat) {
+        const year_etat = compute_past_or_future_project_state(projet, year);
+        if (year_etat !== expected_etat) {
+            output.innerHTML += `test failed for ${projet.name} ${year}: expected ${expected_etat}, got ${year_etat}\n`;
+        }
+    };
+    test(params.projets[0], 2018, "Terminé");
+
+    test(params.projets[1], 2018, "Futur"); // TODO
+    test(params.projets[1], 2019, "En cours"); // TODO
+
+    test(params.projets[2], 2014, null);         test(params.projets[3], 2014, null);
+    test(params.projets[2], 2015, "En cours");   test(params.projets[3], 2015, "En cours");
+    test(params.projets[2], 2016, "En cours");   test(params.projets[3], 2016, "En cours");
+    test(params.projets[2], 2017, "En retard");  test(params.projets[3], 2017, "En cours");
+    test(params.projets[2], 2018, null);         test(params.projets[3], 2018, null); 
+    
+    if (output.innerHTML === '') output.innerHTML = 'All ok';
+  </script>
+</body>
+</html>
+
+

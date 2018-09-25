@@ -112,21 +112,21 @@ function compute_past_or_future_project_state(projet, year) {
     if (!projet.start_year) return null;
 
     var close_year = projet.close_year;
-    if (projet.start_year <= year && 
-        year <= (close_year ? min_no_falsy(projet.end_year, close_year) - 1 : projet.end_year)) {
-        return "En cours";
-    }
     if (projet.end_year && projet.end_year <= year &&
         (today_year === year ? 
           projet.etat === 'En retard' :
           year <= min_no_falsy(close_year, today_year))) {
         return "En retard";
     }
-    if (close_year) {
-        return close_year === year ? projet.etat : null;
-    }
     if (year === projet.start_year && projet.etat === 'Futur') {
         return "Futur";
+    }
+    if (projet.start_year <= year && 
+        year <= (close_year ? min_no_falsy(projet.end_year, close_year) - 1 : projet.end_year)) {
+        return "En cours";
+    }
+    if (close_year) {
+        return close_year === year ? projet.etat : null;
     }
     return null;
 }
