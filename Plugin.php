@@ -12,6 +12,7 @@ class Plugin extends Base
         $this->applicationAccessMap->add('IndicateursController', '*', Role::APP_USER);
 
         $this->template->hook->attach('template:project-list:menu:after', 'Indicateurs:menu');
+        $this->template->hook->attach('template:dashboard:page-header:menu', 'Indicateurs:menu');
 
         $this->route->enable();
         $this->route->addRoute('/indicateurs', 'IndicateursController', 'index', 'Indicateurs');
