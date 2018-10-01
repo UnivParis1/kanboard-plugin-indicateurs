@@ -23,7 +23,7 @@ class IndicateursController extends BaseController
             $owner = $this->userModel->getById($project['owner_id']);
             $categories = array_map(function ($cat) { return $cat['name']; }, $this->categoryModel->getAll($project['id']));
 
-            $roles = array_merge([ "owner" => "Responsable du projet" ], $this->projectRoleModel->getList($project['id']));
+            $roles = array_merge([ "owner" => "Responsable fonctionnel" ], $this->projectRoleModel->getList($project['id']));
             unset($roles['project-viewer']);
 
             $name_link = $this->helper->url->link($project["name"], 'BoardViewController', 'show', array('project_id' => $project['id']), false, '', '', true);
