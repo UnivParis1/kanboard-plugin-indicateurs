@@ -19,6 +19,8 @@ class IndicateursController extends BaseController
         $projets = [];
 
         foreach ($this->projectModel->getAll() as $project) {
+            if ($project['is_private']) continue;
+
             $etat = $this->computeEtatProjet($project);
             $owner = $this->userModel->getById($project['owner_id']);
             $categories = array_map(function ($cat) { return $cat['name']; }, $this->categoryModel->getAll($project['id']));
