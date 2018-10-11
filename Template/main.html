@@ -43,6 +43,9 @@
             <span v-else-if="col.key === 'priority_default'">
                 {{priorites[project.priority_default]}}
             </span>
+            <span v-else-if="col.key === 'services'">
+                {{(project[col.key] || []).length ? project[col.key].join(', ') : 'inconnu' }}
+            </span>
             <span v-else>
                 {{project[col.key]}}
             </span>

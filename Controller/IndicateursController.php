@@ -42,7 +42,7 @@ class IndicateursController extends BaseController
                 'etat' => $etat,
                 'categories' => $categories,
                 'progress' => $this->computeProgress($project),
-                'service' => $this->computeService($project),
+                'services' => $this->computeServices($project),
                 'domaine' => self::getDomaine($categories),
                 "name_link" => $name_link,
                 "tooltips" => $tooltips,
@@ -57,13 +57,14 @@ class IndicateursController extends BaseController
         )));
     }
 
-    function computeService($project) {
+    function computeServices($project) {
+        $l = [];
         foreach ($this->projectGroupRoleModel->getGroups($project['id']) as $e) {
             if ($e['role'] === self::$roleForService) {
-                if (preg_match(self::$group2service_regexp, $e['name'], $m)) return $m[1];
+                if (preg_match(self::$group2service_regexp, $e['name'], $m)) $l[] = $m[1];
             }
         }
-        return 'inconnu';
+        return array_unique($l);
     }
 
     function computeProgress($project) {

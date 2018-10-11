@@ -1,6 +1,6 @@
 var columns = [
     { name: "Nom", key: "name" },
-    { name: "Service", key: "service" },
+    { name: "Service", key: "services" },
     { name: "Etat", key: "etat" },
     { name: "Date de début", key: "start_date" },
     { name: "Date de fin", key: "end_date" },
@@ -36,7 +36,7 @@ var colors = {
     "Scolarité": '#77a1e5',
     // '#c42525''#a6c96a',
   },
-  service: {
+  services: {
     "inconnu": "gray",
     "DSIUN-SAS": '#4572A7', 
     "DSIUN-SIS": '#AA4643', 
@@ -50,9 +50,13 @@ function makeObject(key, val) {
     return o;
 }
 
-function groupBy(xs, key) {
+function groupBy_may_duplicate(xs, key) {
     return xs.reduce(function(rv, x) {
-        (rv[x[key]] = rv[x[key]] || []).push(x);
+        var names = x[key];
+        if (!Array.isArray(names)) names = [names];
+        names.forEach(name => {
+            (rv[name] = rv[name] || []).push(x);
+        });
         return rv;
     }, {});
 }
@@ -217,7 +221,11 @@ function filter_projets(projets, filterKeys, filterAll, startYear, endYear) {
     return projets.filter(function (projet) {
         for (filterKey in filterKeys) {
             var wanted = filterKeys[filterKey];
-            if (wanted && projet[filterKey] !== wanted) return false;
+            if (wanted) {
+                var val = projet[filterKey];
+                var matches = Array.isArray(val) ? val.includes(wanted) : val === wanted;
+                if (!matches) return false;
+            }
         }
         if (endYear && projet.start_year && projet.start_year > endYear) return false;
         if (startYear && projet.end_year && projet.end_year < startYear) return false;
@@ -332,7 +340,7 @@ new Vue({
         var projets = this.filteredData;
         this.pieChart_helper('etat', 'États des projets' + (this.currentYear ? ' en ' + this.currentYear : '') + ' (' + projets.length + ')',
                              this.currentYear ? 'year_etat' : 'etat', colors.etat);
-        this.pieChart_helper('service', 'Projets par services');
+        this.pieChart_helper('services', 'Projets par services');
         this.pieChart_helper('domaine', 'Projets par domaine fonctionnel');
         histogrammeGeneral(this.startYear, this.endYear, projets);
       },
@@ -341,11 +349,11 @@ new Vue({
         var filterKeysIgnoreKind = $.extend({}, this.filterKeys, makeObject(kind, ''));
         var projets = filter_projets(this.projets, filterKeysIgnoreKind, this.filterAll, this.startYear, this.endYear);
 
-        if (!all) all = groupBy(this.projets, kind);
-        var nbs = groupBy(projets, kind_for_nb || kind);
+        if (!all) all = groupBy_may_duplicate(this.projets, kind);
+        var nbs = groupBy_may_duplicate(projets, kind_for_nb || kind);
 
         pieChart({ 
-            eltId: 'pie_' + kind + 's', 
+            eltId: 'pie_' + kind + (kind.match(/s$/) ? '' : 's'), 
             title: title,
             series_data: $.map(all, function (_, name) {
                 var nb = nbs[name] && nbs[name].length || 0;
