@@ -425,7 +425,15 @@ new Vue({
         });
       },
       exportCSV: function (event) {
-        var csv = toCSV(this.filteredData, columns_csv);
+        var dynamic_columns = {};
+        this.filteredData.forEach(function(project) {
+            var key;
+            for (key in project) {
+                var m = key.match(/^category_(.*)/);
+                if (m) dynamic_columns[key] = { key: key, name: m[1] };
+            }
+        });
+        var csv = toCSV(this.filteredData, columns_csv.concat(Object.values(dynamic_columns)));
         var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
         var link = document.createElement("a");
         link.setAttribute("href", uri);
