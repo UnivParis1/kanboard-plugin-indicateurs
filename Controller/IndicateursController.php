@@ -25,18 +25,22 @@ class IndicateursController extends BaseController
             $owner = $this->userModel->getById($project['owner_id']);
             $categories = array_map(function ($cat) { return $cat['name']; }, $this->categoryModel->getAll($project['id']));
 
+            $role2users = array_merge([ "owner" => [ $owner['name'] ] ], $this->projectUserRoleModel->getAllUsersGroupedByRole($project['id']));
             $roles = array_merge([ "owner" => "Responsable fonctionnel" ], $this->projectRoleModel->getList($project['id']));
             unset($roles['project-viewer']);
 
             $name_link = $this->helper->url->link($project["name"], 'BoardViewController', 'show', array('project_id' => $project['id']), false, '', '', true);
 
-            $tooltip_users = $this->template->render('project_user_overview/tooltip_users', array(
-                'users' => array_merge([ "owner" => [ $owner['name'] ] ], $this->projectUserRoleModel->getAllUsersGroupedByRole($project['id'])),
-                'roles' => $roles,
-            ));
+            $tooltip_users = $this->template->render('project_user_overview/tooltip_users', array('users' => $role2users, 'roles' => $roles));
             $tooltips = $this->helper->app->tooltipHtml($tooltip_users, 'fa-users');
             if (!empty($project['description']))
                 $tooltips .= $this->helper->app->tooltipMarkdown($project['description']);
+
+            $roles_users = [];
+            foreach ($roles as $key => $name) {
+                $users = array_filter(array_values($role2users[$key])); // we want plain user names + remove nulls
+                $roles_users[] = [ key => $key, name => $name, users => $users ];
+            }
 
             $projets[] = array_merge([
                 'etat' => $etat,
@@ -45,6 +49,7 @@ class IndicateursController extends BaseController
                 'services' => $this->computeServices($project),
                 'domaine' => self::getDomaine($categories),
                 "name_link" => $name_link,
+                "roles_users" => $roles_users,
                 "tooltips" => $tooltips,
             ], $project);
         }

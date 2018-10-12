@@ -8,6 +8,12 @@ var columns = [
     { name: "Domaine", key: 'domaine' },
 ];
 
+var columns_csv = columns.concat([
+    { name: "Avancement", key: "progress", to_csv: to_integer(100) },
+    { name: "Membres", key: "roles_users", to_csv: roles_users_to_text },
+    { name: "Description", key: "description" },
+]);
+
 var priorites = [ 
     'Basse', 
     'Normale', 
@@ -44,6 +50,20 @@ var colors = {
   },
 };
 
+function to_integer(unratio) {
+    return function (n) {
+        return Math.round(n * 100);
+    }
+}
+
+function roles_users_to_text(roles_users) {
+    return (roles_users || []).filter(function (role_users) {
+        return (role_users.users || []).length;
+    }).map(function (role_users) {
+        return role_users.name + " : " + role_users.users.join(", ");
+    }).join("\n");
+}
+
 function makeObject(key, val) {
     let o = {};
     o[key] = val;
@@ -74,6 +94,27 @@ function sqlDateToYear(date) {
 }
 function epochToYear(epoch) {
     return epoch && new Date(epoch * 1000).getFullYear();
+}
+
+function row_toCSV(row) {
+    return row.map(function (val) {
+        return val.match(/[",\n]/) ? '"' + val.replace(/"/g, '""') + '"' : val;
+    }).join(',') + "\n"
+}
+function rows_toCSV(rows) {
+    return rows.map(row_toCSV).join('');
+}
+
+function toCSV(objects, columns) {
+    var titles = columns.map(function (column) { return column.name });
+    var rows = objects.map(function (o) {
+        return columns.map(function (column) {
+            var val = o[column.key];
+            if (column.to_csv) val = column.to_csv(val);
+            return val ? "" + val : "";
+        });
+    });
+    return rows_toCSV([titles].concat(rows));
 }
 
 function computeannees(startYear, endYear) {
@@ -364,6 +405,15 @@ new Vue({
             },
         });
       },
+      exportCSV: function (event) {
+        var csv = toCSV(this.filteredData, columns_csv);
+        var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+        var link = document.createElement("a");
+        link.setAttribute("href", uri);
+        link.setAttribute("download", "projets.csv");
+        event.target.parentElement.appendChild(link); // needed on Firefox, but not Chromium.
+        link.click();
+      },    
     },
   })
   
