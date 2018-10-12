@@ -47,7 +47,6 @@ class IndicateursController extends BaseController
                 'categories' => $categories,
                 'progress' => $this->computeProgress($project),
                 'services' => $this->computeServices($project),
-                'domaine' => self::getDomaine($categories),
                 "name_link" => $name_link,
                 "roles_users" => $roles_users,
                 "tooltips" => $tooltips,
@@ -95,13 +94,5 @@ class IndicateursController extends BaseController
 
         return "En cours";
     }
-
-    static function getDomaine($categories) {
-        foreach ($categories as $cat) {
-            if (preg_match("/DF_(.*)/", $cat, $m)) return $m[1];
-        }
-        return 'inconnu';
-    }
-
 
 }

@@ -1,14 +1,17 @@
-var columns = [
+var columns_common = [
     { name: "Nom", key: "name" },
-    { name: "Service", key: "services" },
+    { name: "Service", key: "services", to_text: array_to_text },
     { name: "Etat", key: "etat" },
     { name: "Date de début", key: "start_date" },
     { name: "Date de fin", key: "end_date" },
     { name: "Priorité", key: 'priority_default' },
-    { name: "Domaine", key: 'domaine' },
 ];
 
-var columns_csv = columns.concat([
+var columns_html = columns_common.concat([
+    { name: "Domaine", key: 'category_DF', to_text: array_to_text },
+]);
+
+var columns_csv = columns_common.concat([
     { name: "Avancement", key: "progress", to_csv: to_integer(100) },
     { name: "Membres", key: "roles_users", to_csv: roles_users_to_text },
     { name: "Description", key: "description" },
@@ -30,7 +33,7 @@ var colors = {
     "Terminé": 'green',
     "Abandonné": 'purple',
   },
-  domaine: {
+  category_DF: {
     "inconnu": "gray",
     "Transverse": '#2f7ed8',
     "Recherche": '#0d233a',
@@ -56,6 +59,10 @@ function to_integer(unratio) {
     }
 }
 
+function array_to_text(l) {
+    return (l || []).length ? l.join(', ') : '';
+}
+
 function roles_users_to_text(roles_users) {
     return (roles_users || []).filter(function (role_users) {
         return (role_users.users || []).length;
@@ -79,6 +86,17 @@ function groupBy_may_duplicate(xs, key) {
         });
         return rv;
     }, {});
+}
+
+function group_by_category_prefix(project) {
+    project.categories.forEach(function (cat) {
+        var m = cat.match(/^([A-Z]+)_(.*)/);
+        if (m) {
+            var cat_field = "category_" + m[1];
+            if (!project[cat_field]) project[cat_field] = [];
+            project[cat_field].push(m[2]);
+        }
+    });
 }
 
 function min_no_falsy(a, b) {
@@ -286,6 +304,7 @@ function computeProjets() {
         projet.end_year = sqlDateToYear(projet.end_date);
         projet.close_year = projet.is_active ? null : epochToYear(projet.last_modified);
         projet.year_etat = undefined;
+        group_by_category_prefix(projet);
         return projet;
       });
 }
@@ -303,7 +322,7 @@ Vue.component('etat-with-color', {
 new Vue({
     el: '#vueMain',
     propsData: {
-        columns: columns,
+        columns: columns_html,
         projets: computeProjets(),
         filterAll: '',
     },
@@ -382,7 +401,7 @@ new Vue({
         this.pieChart_helper('etat', 'États des projets' + (this.currentYear ? ' en ' + this.currentYear : '') + ' (' + projets.length + ')',
                              this.currentYear ? 'year_etat' : 'etat', colors.etat);
         this.pieChart_helper('services', 'Projets par service');
-        this.pieChart_helper('domaine', 'Projets par domaine fonctionnel');
+        this.pieChart_helper('category_DF', 'Projets par domaine fonctionnel');
         histogrammeGeneral(this.startYear, this.endYear, projets);
       },
       pieChart_helper: function (kind, title, kind_for_nb, all) {

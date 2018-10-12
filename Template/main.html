@@ -16,7 +16,7 @@
     <div class="pies">
         <div id="pie_etats"></div>    
         <div id="pie_services"></div>
-        <div id="pie_domaines"></div>
+        <div id="pie_category_DFs"></div>
     </div>
 
     <div id="histogrammeGeneral"></div>
@@ -43,8 +43,8 @@
             <span v-else-if="col.key === 'priority_default'">
                 {{priorites[project.priority_default]}}
             </span>
-            <span v-else-if="col.key === 'services'">
-                {{(project[col.key] || []).length ? project[col.key].join(', ') : 'inconnu' }}
+            <span v-else-if="col.to_text">
+                {{col.to_text(project[col.key], project)}}
             </span>
             <span v-else>
                 {{project[col.key]}}
