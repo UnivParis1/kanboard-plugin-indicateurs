@@ -80,7 +80,7 @@ function makeObject(key, val) {
 function groupBy_may_duplicate(xs, key) {
     return xs.reduce(function(rv, x) {
         var names = x[key];
-        if (!Array.isArray(names)) names = [names];
+        if (!Array.isArray(names)) names = [names || '<i>inconnu</i>'];
         names.forEach(name => {
             (rv[name] = rv[name] || []).push(x);
         });
@@ -281,6 +281,9 @@ function filter_projets(projets, filterKeys, filterAll, startYear, endYear) {
         for (filterKey in filterKeys) {
             var wanted = filterKeys[filterKey];
             if (wanted) {
+                if (wanted === '<i>inconnu</i>') {
+                    wanted = undefined;
+                }
                 var val = projet[filterKey];
                 var matches = Array.isArray(val) ? val.includes(wanted) : val === wanted;
                 if (!matches) return false;
