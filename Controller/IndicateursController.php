@@ -18,7 +18,8 @@ class IndicateursController extends BaseController
     {
         $projets = [];
 
-        foreach ($this->projectModel->getAll() as $project) {
+        $projectIds = array_keys($this->projectGroupRoleModel->getProjectsByUser($this->userSession->getId()));
+        foreach ($this->projectModel->getAllByIds($projectIds) as $project) {
             if ($project['is_private']) continue;
 
             $etat = $this->computeEtatProjet($project);
