@@ -184,7 +184,7 @@ function compute_past_or_future_project_state(projet, year) {
         return "Futur";
     }
     if (projet.start_year <= year && 
-        year <= (close_year ? min_no_falsy(projet.end_year, close_year) - 1 : projet.end_year)) {
+        year <= (close_year ? min_no_falsy(projet.end_year, close_year) - 1 : projet.end_year || year)) {
         return "En cours";
     }
     if (close_year) {
