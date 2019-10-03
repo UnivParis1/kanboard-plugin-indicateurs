@@ -147,7 +147,6 @@ function computeannees(startYear, endYear) {
 function initHistogramme(annees) {
     var r = {};
     $.each(colors.etat, function (etat, color) {
-        if (etat === 'En attente') return;
         var status_data = annees.map(function (annee) { return 0; });
         r[etat] = { name: etat, color: color, data: status_data };
     });
@@ -172,7 +171,7 @@ function computeHistogramme(startYear, endYear, projets) {
 }
 
 function compute_past_or_future_project_state(projet, year) {
-    if (!projet.start_year) return null;
+    if (!projet.start_year) return "En attente";
 
     var close_year = projet.close_year;
     if (projet.end_year && projet.end_year <= year &&
