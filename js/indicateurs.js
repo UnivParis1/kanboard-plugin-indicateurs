@@ -289,7 +289,7 @@ function filter_projets(projets, filterKeys, filterAll, startYear, endYear) {
             }
         }
         if (endYear && projet.start_year && projet.start_year > endYear) return false;
-        if (startYear && projet.end_year && projet.end_year < startYear) return false;
+        if (startYear && projet.end_year && min_no_falsy(projet.end_year, projet.close_year) < startYear) return false;
 
         return !filterAll || Object.keys(projet).some(function (key) {
             return String(projet[key]).toLowerCase().indexOf(filterAll) > -1
