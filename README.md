@@ -2,7 +2,7 @@ Projets
 ==================================================================
 Chef de projet : Pascal Rigaux
 
-Techno : Kanboard v1.2.4
+Techno : Kanboard >= v1.2.4 (validé en 1.2.18)
 
 Liens : https://kanboard.org/
 
