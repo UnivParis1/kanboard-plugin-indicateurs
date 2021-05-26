@@ -6,7 +6,7 @@ Techno : Kanboard >= v1.2.4 (validé en 1.2.18)
 
 Liens : https://kanboard.org/
 
-## Installation :
+## Installation
 
 ```git clone https://github.com/UnivParis1/kanboard-plugin-indicateurs plugins/Indicateurs```
 
