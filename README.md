@@ -41,6 +41,6 @@ Les régles sont les suivantes :
   - futur : date début > date courant
   - en retard : date de fin < date courant
   - terminée : projet “fermé”
-  - abandonné : présence du mot clé “#Abandonné” (à voir comment on s'en sert, Aymar n'a pas su répondre)
+  - abandonné : projet “fermé” et présence du mot clé “#Abandonné”
 
 - domaine fonctionnel est une catégorie dans le projet kanban avec le prefixe DF_ 

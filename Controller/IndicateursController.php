@@ -22,9 +22,9 @@ class IndicateursController extends BaseController
         foreach ($this->projectModel->getAllByIds($projectIds) as $project) {
             if ($project['is_private']) continue;
 
-            $etat = $this->computeEtatProjet($project);
-            $owner = $this->userModel->getById($project['owner_id']);
             $categories = array_map(function ($cat) { return $cat['name']; }, $this->categoryModel->getAll($project['id']));
+            $etat = $this->computeEtatProjet($project, $categories);
+            $owner = $this->userModel->getById($project['owner_id']);
 
             $role2users = array_merge([ "owner" => [ $owner['name'] ] ], $this->projectUserRoleModel->getAllUsersGroupedByRole($project['id']));
             $roles = array_merge([ "owner" => "Responsable fonctionnel" ], $this->projectRoleModel->getList($project['id']));
@@ -82,8 +82,10 @@ class IndicateursController extends BaseController
         return $total ? $progress / $total : null;
     }
 
-    function computeEtatProjet($project) {
-        if (!$project['is_active']) return "Terminé";
+    function computeEtatProjet($project, $categories) {
+        if (!$project['is_active']) {
+            return in_array("#Abandonné", $categories) ? "Abandonné" : "Terminé";
+        }
         if (!$project['start_date']) return "En attente";
 
         $now = new \DateTime(date("Y-m-d"));
