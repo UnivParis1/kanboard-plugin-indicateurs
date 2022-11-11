@@ -40,7 +40,7 @@ class IndicateursController extends BaseController
             $roles_users = [];
             foreach ($roles as $key => $name) {
                 $users = array_filter(array_values($role2users[$key])); // we want plain user names + remove nulls
-                $roles_users[] = [ key => $key, name => $name, users => $users ];
+                $roles_users[] = [ 'key' => $key, 'name' => $name, 'users' => $users ];
             }
 
             $projets[] = array_merge([
@@ -56,7 +56,7 @@ class IndicateursController extends BaseController
 
         $this->response->html($this->helper->layout->pageLayout('Indicateurs:indicateurs', array(
             'title' => t("Indicateurs"),
-            'params' => [ 
+            'params' => [
                 'projets' => $projets,
             ],
         )));
