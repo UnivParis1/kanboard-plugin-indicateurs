@@ -17,7 +17,7 @@ class Plugin extends Base
         $this->route->enable();
         $this->route->addRoute('/indicateurs', 'IndicateursController', 'index', 'Indicateurs');
 
-        $this->setContentSecurityPolicy(array('script-src-elem' => 'self'));
+        $this->setContentSecurityPolicy(array('script-src' => "'self' 'unsafe-inline' 'unsafe-eval'"));
     }
 
     public function getClasses()
