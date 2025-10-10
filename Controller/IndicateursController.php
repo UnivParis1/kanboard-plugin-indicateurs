@@ -39,7 +39,7 @@ class IndicateursController extends BaseController
 
             $roles_users = [];
             foreach ($roles as $key => $name) {
-                $users = array_filter(array_values($role2users[$key])); // we want plain user names + remove nulls
+                $users = array_filter(array_values($role2users[$key] ?? [])); // we want plain user names + remove nulls
                 $roles_users[] = [ 'key' => $key, 'name' => $name, 'users' => $users ];
             }
 
